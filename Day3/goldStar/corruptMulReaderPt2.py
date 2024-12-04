@@ -1,6 +1,14 @@
 '''
 HELPER METHODS
 '''
+# method to find next iteration of "don't()"
+def findDont(myString):
+    return myString.find("don't()")
+
+# method to find next iteration of "do()" to re-enable problems
+def findDo(myString):
+    return myString.find("do()")
+
 # method to find next multiplication problem in text
 # returns -1 if not found
 def findNextProb(myString):
@@ -48,6 +56,10 @@ myFile = open("input.txt",'r')
 # list to store all of the collected multiplication problems
 multProbs = []
 
+# do() operation is initially set to true
+# when don't() appears value is switched to false
+doEnable = True
+
 # loop to iterate through input file
 for line in myFile:
     
@@ -56,14 +68,35 @@ for line in myFile:
 
     # loop to get all multiplication problems from text
     while (len(myLine) > 0):
+        
+        # if next problems should not be processed 
+        if (doEnable == False):
+            # if don't() is activated
+            nextDo = findDo(myLine)
+            # if don't() remains active through rest of line
+            if(nextDo == -1):
+                break
+            # skips to next do() which activates problems
+            myLine = myLine[nextDo:]
+            doEnable = True
+            continue
+
 
         # methods to get next multiplication problem from text
         nextMul = findNextProb(myLine)
+
+        # checking if "don't()" gets activated before problem
+        nextDont = findDont(myLine)
+        if(nextDont != -1 and nextDont < nextMul):
+            doEnable = False
+            continue
 
         # break condition if no more problems
         if (nextMul == -1):
             myLine = ""
             continue
+
+        
 
         # cutting off leading corrupt characters
         myLine = myLine[nextMul:]
