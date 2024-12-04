@@ -20,6 +20,24 @@ def findProbEnd(myString):
     # else return index of closing ')'
     return tempIndex
 
+# helper method to parse through multiplication problems
+# returns the product of the problem
+def parseMul(problem):
+    # splits problem up to make easier to parse numbers
+    parts = problem.split(",")
+   
+    try:
+        # num1 found after getting rid of 'mul('
+        num1 = int(parts[0][4:])
+
+        # num2 found after chopping of closing ')'
+        probEnd = findProbEnd(parts[1])
+        num2 = int(parts[1][0:probEnd])
+
+        return num1 * num2
+    except ValueError:
+        return 0
+
 
 '''
 MAIN
@@ -64,4 +82,19 @@ for line in myFile:
 
         # iterating loop condition
         myLine = myLine[1:]
+
+
+# after all multiplication problems are collected
+# use helper method to solve each of the problems
+totalAnswer = 0
+
+for problem in multProbs:
+    # helper method to solve problem
+    tempProduct = parseMul(problem)
+
+    # adding partial product to total
+    totalAnswer += tempProduct
+
+# add all of the partial sums together (FINAL ANSWER)
+print(totalAnswer)
 
